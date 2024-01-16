@@ -9,5 +9,6 @@
     </p>
   <% end %>
 </div>
-
+  <% if current_user.user_type=='admin'%>
 <%= link_to "New post", new_post_path %>
+  <% end %>

@@ -1,10 +1,20 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
-  before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :set_post, only: %i[ show ]
 
+  # include CanCan::Ability
+
+  # def initialize(user)
+  #   user ||= User.new # guest user (not logged in)
+  #  if user.admin?
+  #    can :manage, Post
+  #  else
+  #    can :read, Post
+  #  end
   # GET /posts or /posts.json
   def index
+    authorize! :read, Post
     @posts = Post.all
   end
 
@@ -24,7 +34,7 @@ class PostsController < ApplicationController
   # POST /posts or /posts.json
   def create
     @post = Post.new(post_params)
-
+    authorize! :create, @post
     respond_to do |format|
       if @post.save
         format.html { redirect_to post_url(@post), notice: "Post was successfully created." }
@@ -60,7 +70,7 @@ class PostsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    #Use callbacks to share common setup or constraints between actions.
     def set_post
       @post = Post.find(params[:id])
     end
